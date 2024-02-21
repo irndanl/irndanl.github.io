@@ -1,10 +1,10 @@
 ---
-title: "Isabella Nicastro" 
+title: "Isabella Nicastro"
 about:
   template: trestles  # jolla  trestles  solana  marquee  broadside
-  image: img/profile.png
+  image: img/profile.jpeg
   image-width: 16em
-  image-shape: round # rectangle  round  rounded
+  image-shape: rounded # rectangle  round  rounded
   
   links:
     - icon: linkedin
@@ -18,10 +18,10 @@ about:
       href: https://github.com
     - icon: file-earmark-pdf
       text: Resumé
-      href: https://GITHUB_USERNAME.github.io/resume-example.pdf
+      href: https://irndanl.github.io/resume-example.pdf
     - icon: mailbox
       text: Email
-      href: mailto:YOUR_EMAIL@geneseo.edu
+      href: mailto:irn1@geneseo.edu
 
 ---
 
