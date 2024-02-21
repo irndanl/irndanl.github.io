@@ -10,9 +10,6 @@ about:
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/isabella-nicastro-3278951a4
-    - icon: instagram
-      text: Instagram
-      href: https://instagram.com
     - icon: github
       text: GitHub
       href: https://github.com/irndanl
@@ -26,13 +23,13 @@ about:
 ---
 
 
-Finley Malloc majors in Data Analytics at SUNY Geneseo. When not working on data analytics, Finley enjoys spending time unicycling and playing with her pet iguana.
+Isabella Nicastro majors in Finance and minors in Data Analytics at SUNY Geneseo. When not working on finance or data analytics, Isabella enjoys spending time playing lacrosse and spending time with family and friends.
 
 ## Education
 
 State University of New York at Geneseo | Geneseo, NY <br>
-B.S. in Data Analytics | Aug 2022 - May 2026 <br>
-Minor in Business Administration 
+B.S. in Finance | Aug 2020 - May 2024 <br>
+Minor in Data Analytics  
 
 ## Experience
 
