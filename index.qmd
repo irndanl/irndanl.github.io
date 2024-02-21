@@ -9,13 +9,13 @@ about:
   links:
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://www.linkedin.com/in/isabella-nicastro-3278951a4
     - icon: instagram
       text: Instagram
       href: https://instagram.com
     - icon: github
       text: GitHub
-      href: https://github.com
+      href: https://github.com/irndanl
     - icon: file-earmark-pdf
       text: Resumé
       href: https://irndanl.github.io/irnresume.pdf
