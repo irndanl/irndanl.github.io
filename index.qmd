@@ -18,7 +18,7 @@ about:
       href: https://github.com
     - icon: file-earmark-pdf
       text: Resumé
-      href: https://irndanl.github.io/resume-example.pdf
+      href: https://irndanl.github.io/irnresume.pdf
     - icon: mailbox
       text: Email
       href: mailto:irn1@geneseo.edu
