@@ -1,0 +1,44 @@
+---
+title: DANL Project
+subtitle: Financial Literacy
+author: 
+  -Isabella Nicastro
+
+toc: true
+toc-title: "Table of Contents"
+toc-depth: 2
+number-sections: true
+
+fig-width: 9
+
+execute:
+  code-tools: true
+  message: false
+  warning: false
+
+from: markdown+emoji
+---
+
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(gapminder)
+library(skimr)   # a better summary of data.frame
+library(scales)  # scales for ggplot
+library(ggthemes)  # additional ggplot themes
+library(hrbrthemes) # additional ggplot themes and color pallets
+library(lubridate)
+library(ggridges)
+library(ggrepel)
+library(tidyverse)
+library(ggfortify) # to create regression-related plots
+library(ggcorrplot) # to create correlation heatmaps
+library(fastDummies) # to create dummy variables
+theme_set(theme_minimal()) # setting the minimal theme for ggplot
+
+```
+
+# Abstract
+
+Through surveying the SUNY Geneseo student body, we plan to explore what determines the level of financial literacy among students at SUNY Geneseo. The survey contains questions that address students’ demographics, academic background, family support through college, personal finance experience, and a financial literacy quiz. The sample size is 403 respondents, which is 10% of the population at SUNY Geneseo. We have noticed many students struggling on campus with the basics of personal finance and want to address the growing concern of how this could affect their success through college and in the future. We are interested in how the students' family or academic background is associated with their financial literacy. Based on this exploration we plan to make some policy and curriculum suggestions on how we can improve the overall understanding of personal finance at SUNY Geneseo. Based on this research we plan to design a curriculum that will be offered to all students through the Geneseo Opportunities for Leadership Development (GOLD) program and will address the largest educational gaps that were identified in the survey. This course will be evaluated by administering the same financial literacy quiz following completion of the course and will offer insight into whether or not there is a substantial change in the students' personal finance knowledge. 

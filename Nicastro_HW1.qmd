@@ -1,0 +1,149 @@
+---
+title: "ggplot"
+author: "Isabella Nicastro"
+date: "2023-10-30"
+categories: [ggplot, code, analysis]
+image: "image.png"
+
+execute: 
+  warning: false
+  message: false
+  
+toc: true
+---
+```{r}
+#| include: false
+
+library(tidyverse)
+library(knitr)
+library(rmarkdown)
+library(tidyverse)
+library(skimr)
+library(ggthemes)
+library(hrbrthemes)
+
+theme_set(theme_ipsum()+
+          theme(strip.background =element_rect(fill="lightgray"),
+                axis.title.x  = element_text(angle = 0,
+                                            size = rel(1.5),
+                                            margin = margin(10,0,0,0)),
+                axis.title.y  = element_text(angle = 0,
+                                            size = rel(1.5),
+                                            margin = margin(0,10,0,0))
+                )
+          )
+```
+
+Question 1 homework #1 
+```{r}
+ncdc_temp <- read_csv('https://bcdanl.github.io/data/ncdc_temp_cleaned.csv')
+date_selected <- c('0000-01-01','0000-04-01','0000-07-01','0000-10-01','0000-12-31')
+df <- filter(ncdc_temp, date %in% date_selected)
+p <- ggplot(data = ncdc_temp,
+            mapping =
+              aes( x = date,
+                   y = temperature ) )
+
+p + geom_line( aes( color = location ),show.legend = F) +
+  geom_point(data = df) +
+  labs(x = 'month') + 
+  scale_x_date(breaks = as.Date(date_selected),
+               date_labels = "%b")
+```
+
+
+ggplot is a data visualization tool
+
+
+```{r}
+ggplot(mpg) +
+  geom_boxplot(aes(x=class,y=hwy))
+```
+
+Question 2 homework #1
+```{r}
+p_1 <- ggplot(data = ncdc_temp,
+            mapping =
+              aes(x = temperature,
+                  y = month))
+p_1 + geom_boxplot(fill = "grey70") +
+  labs(x = NULL) +
+  coord_flip()
+```
+
+Question 3 Homework #1 
+
+```{r}
+library(ggridges)
+
+p <- ggplot(data = ncdc_temp,
+            mapping = 
+              aes(x = temperature,
+                  y = month))
+p + geom_density_ridges(alpha = 0.3, fill = "blue")
+
+
+```
+```{r}
+cars <- mtcars
+
+c<- ggplot(cars, aes(disp, mpg)) +
+        geom_point(aes(color = hp))
+c + labs(x= "displacement")+ labs(y= "fuel efficiency")
+```
+
+
+
+
+
+
+```{r}
+popgrowth_df <- read_csv(
+  'https://bcdanl.github.io/data/popgrowth.csv')
+
+
+pg<- ggplot(popgrowth_df, aes(reorder(state, popgrowth), popgrowth, fill = region)) +
+        geom_bar(stat = "identity", position = "dodge") +
+        coord_flip() +
+        theme(legend.position = c(0.8, 0.2))
+
+pg + labs(y= "population growth 2000 to 2010")+ labs(x= "reorder state, pop growth")
+```
+
+```{r}
+male_Aus <- read_csv(
+  'https://bcdanl.github.io/data/aus_athletics_male.csv')
+
+ma<- ggplot(male_Aus, aes(x=height, y= pcBfat, group=sport)) +
+  geom_point(aes(shape=sport, color= sport)) + 
+  scale_color_manual(values = c('red','grey','grey','grey','grey'))
+
+ma + labs(x= "height(cm)")+ labs(y= "% body fat")
+
+```
+
+```{r}
+titanic <- read_csv(
+  'https://bcdanl.github.io/data/titanic_cleaned.csv')
+
+# t <- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))
+# data<- melt(titanic$age)
+t_2 <- titanic %>% mutate(sex = 'female')
+t_3 <- titanic %>% mutate(sex = 'male')
+t4 <- rbind(t_2, t_3)
+
+ggplot( mapping= aes(x=age, y = stat(count) ) )  + geom_density(data = t4, fill = 'grey',color = 'grey') + geom_density(data = titanic, aes(fill=sex)) + facet_wrap(sex~.)
+```
+               
+```{r}
+
+cows_filtered <- read_csv(
+  'https://bcdanl.github.io/data/cows_filtered.csv')
+
+t <- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))
+# data<- melt(cows_filtered$butterfat)
+ggplot(cows_filtered, aes(x=butterfat, fill=breed, color = breed)) + geom_density(alpha=0.25) 
+
+```
+               
+               

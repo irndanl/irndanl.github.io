@@ -1,0 +1,16 @@
+{
+  "hash": "c9aa8fe45b8c4f2dcc4b8bc618d25b17",
+  "result": {
+    "markdown": "---\ntitle: \"ggplot\"\nauthor: \"Your Name\"\ndate: \"2023-10-30\"\ncategories: [ggplot, code, analysis]\nimage: \"image.png\"\n\nexecute: \n  warning: false\n  message: false\n  \ntoc: true\n---\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nncdc_temp <- read_csv(\n  'https://bcdanl.github.io/data/ncdc_temp_cleaned.csv')\n```\n:::\n\n\n\n\nggplot is a data visualization tool\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(mpg) +\n  geom_boxplot(aes(x=class,y=hwy))\n```\n\n::: {.cell-output-display}\n![](ggplot-basic_files/figure-html/unnamed-chunk-3-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "ggplot-basic_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

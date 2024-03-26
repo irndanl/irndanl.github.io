@@ -42,20 +42,6 @@
     "text": "Experience\nStarbucks Analytics | Data Analyst Intern | May 2024 - Aug 2024"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
-  },
-  {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code with no space in the folder name.\n\n1 + 1\n\n[1] 2"
-  },
-  {
     "objectID": "posts/starwars/starwars_df.html",
     "href": "posts/starwars/starwars_df.html",
     "title": "Starwars",
@@ -75,6 +61,34 @@
     "title": "Starwars",
     "section": "Human vs. Droid",
     "text": "Human vs. Droid\n\nggplot(data = \n         starwars %&gt;% \n         filter(species %in% c(\"Human\", \"Droid\"))) +\n  geom_boxplot(aes(x = species, y = mass, \n                   fill = species),\n               show.legend = FALSE)"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code with no space in the folder name.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "Nicastro_HW1.html",
+    "href": "Nicastro_HW1.html",
+    "title": "ggplot",
+    "section": "",
+    "text": "Question 1 homework #1\n\nncdc_temp &lt;- read_csv('https://bcdanl.github.io/data/ncdc_temp_cleaned.csv')\ndate_selected &lt;- c('0000-01-01','0000-04-01','0000-07-01','0000-10-01','0000-12-31')\ndf &lt;- filter(ncdc_temp, date %in% date_selected)\np &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes( x = date,\n                   y = temperature ) )\n\np + geom_line( aes( color = location ),show.legend = F) +\n  geom_point(data = df) +\n  labs(x = 'month') + \n  scale_x_date(breaks = as.Date(date_selected),\n               date_labels = \"%b\")\n\n\n\n\nggplot is a data visualization tool\n\nggplot(mpg) +\n  geom_boxplot(aes(x=class,y=hwy))\n\n\n\n\nQuestion 2 homework #1\n\np_1 &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes(x = temperature,\n                  y = month))\np_1 + geom_boxplot(fill = \"grey70\") +\n  labs(x = NULL) +\n  coord_flip()\n\n\n\n\nQuestion 3 Homework #1\n\nlibrary(ggridges)\n\np &lt;- ggplot(data = ncdc_temp,\n            mapping = \n              aes(x = temperature,\n                  y = month))\np + geom_density_ridges(alpha = 0.3, fill = \"blue\")\n\n\n\n\n\ncars &lt;- mtcars\n\nc&lt;- ggplot(cars, aes(disp, mpg)) +\n        geom_point(aes(color = hp))\nc + labs(x= \"displacement\")+ labs(y= \"fuel efficiency\")\n\n\n\n\n\npopgrowth_df &lt;- read_csv(\n  'https://bcdanl.github.io/data/popgrowth.csv')\n\n\npg&lt;- ggplot(popgrowth_df, aes(reorder(state, popgrowth), popgrowth, fill = region)) +\n        geom_bar(stat = \"identity\", position = \"dodge\") +\n        coord_flip() +\n        theme(legend.position = c(0.8, 0.2))\n\npg + labs(y= \"population growth 2000 to 2010\")+ labs(x= \"reorder state, pop growth\")\n\n\n\n\n\nmale_Aus &lt;- read_csv(\n  'https://bcdanl.github.io/data/aus_athletics_male.csv')\n\nma&lt;- ggplot(male_Aus, aes(x=height, y= pcBfat, group=sport)) +\n  geom_point(aes(shape=sport, color= sport)) + \n  scale_color_manual(values = c('red','grey','grey','grey','grey'))\n\nma + labs(x= \"height(cm)\")+ labs(y= \"% body fat\")\n\n\n\n\n\ntitanic &lt;- read_csv(\n  'https://bcdanl.github.io/data/titanic_cleaned.csv')\n\n# t &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(titanic$age)\nt_2 &lt;- titanic %&gt;% mutate(sex = 'female')\nt_3 &lt;- titanic %&gt;% mutate(sex = 'male')\nt4 &lt;- rbind(t_2, t_3)\n\nggplot( mapping= aes(x=age, y = stat(count) ) )  + geom_density(data = t4, fill = 'grey',color = 'grey') + geom_density(data = titanic, aes(fill=sex)) + facet_wrap(sex~.)\n\n\n\n\n\ncows_filtered &lt;- read_csv(\n  'https://bcdanl.github.io/data/cows_filtered.csv')\n\nt &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(cows_filtered$butterfat)\nggplot(cows_filtered, aes(x=butterfat, fill=breed, color = breed)) + geom_density(alpha=0.25)"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "Nicastro-project-abstract.html",
+    "href": "Nicastro-project-abstract.html",
+    "title": "DANL Project",
+    "section": "",
+    "text": "1 Abstract\nThrough surveying the SUNY Geneseo student body, we plan to explore what determines the level of financial literacy among students at SUNY Geneseo. The survey contains questions that address students’ demographics, academic background, family support through college, personal finance experience, and a financial literacy quiz. The sample size is 403 respondents, which is 10% of the population at SUNY Geneseo. We have noticed many students struggling on campus with the basics of personal finance and want to address the growing concern of how this could affect their success through college and in the future. We are interested in how the students’ family or academic background is associated with their financial literacy. Based on this exploration we plan to make some policy and curriculum suggestions on how we can improve the overall understanding of personal finance at SUNY Geneseo. Based on this research we plan to design a curriculum that will be offered to all students through the Geneseo Opportunities for Leadership Development (GOLD) program and will address the largest educational gaps that were identified in the survey. This course will be evaluated by administering the same financial literacy quiz following completion of the course and will offer insight into whether or not there is a substantial change in the students’ personal finance knowledge."
   },
   {
     "objectID": "blog-listing.html",
