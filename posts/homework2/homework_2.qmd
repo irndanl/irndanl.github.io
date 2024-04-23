@@ -1,0 +1,305 @@
+---
+title: "Data Visualization 2"
+author: "Isabella Nicastro"
+date: "2024-02-21"
+categories: [ggplot, code, analysis]
+---
+
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(gapminder)
+library(skimr)   # a better summary of data.frame
+library(scales)  # scales for ggplot
+library(ggthemes)  # additional ggplot themes
+library(hrbrthemes) # additional ggplot themes and color pallets
+library(lubridate)
+library(ggridges)
+library(ggrepel)
+library(tidyverse)
+library(ggfortify) # to create regression-related plots
+library(ggcorrplot) # to create correlation heatmaps
+library(fastDummies) # to create dummy variables
+theme_set(theme_minimal()) # setting the minimal theme for ggplot
+
+```
+
+# Question 1
+
+Add a web-page of the project proposal to your website. 
+
+```{r}
+#| include: false
+library(tidyverse)
+library(skimr)
+library(ggthemes)
+library(hrbrthemes)
+
+theme_set(theme_ipsum()+
+          theme(strip.background =element_rect(fill="lightgray"),
+                axis.title.x = 
+                  element_text(angle = 0,
+                               size = rel(1.33),
+                               margin = margin(10,0,0,0)),
+                axis.title.y = 
+                  element_text(angle = 0,
+                               size = rel(1.33),
+                               margin = margin(0,10,0,0))
+                )
+          )
+```
+
+# Abstract
+
+Through surveying the SUNY Geneseo student body, we plan to explore what determines the level of financial literacy among students at SUNY Geneseo. The survey contains questions that address students’ demographics, academic background, family support through college, personal finance experience, and a financial literacy quiz. The sample size is 403 respondents, which is 10% of the population at SUNY Geneseo. We have noticed many students struggling on campus with the basics of personal finance and want to address the growing concern of how this could affect their success through college and in the future. We are interested in how the students' family or academic background is associated with their financial literacy. Based on this exploration we plan to make some policy and curriculum suggestions on how we can improve the overall understanding of personal finance at SUNY Geneseo. Based on this research we plan to design a curriculum that will be offered to all students through the Geneseo Opportunities for Leadership Development (GOLD) program and will address the largest educational gaps that were identified in the survey. This course will be evaluated by administering the same financial literacy quiz following completion of the course and will offer insight into whether or not there is a substantial change in the students' personal finance knowledge. 
+
+```{r}
+mpg <- ggplot2::mpg
+```
+
+```{r}
+#| results: asis
+#| echo: false
+rmarkdown::paged_table(mpg)
+```
+
+```{r}
+skim(mpg) %>% 
+  select(-n_missing)
+```
+
+## MPG and a Type of Cars
+The following boxplot shows how the distribution of highway MPG (`hwy`) varies by a type of cars (`class`) :blue_car: :truck: :minibus:.
+
+```{r}
+#| warning: false
+ggplot(data = mpg) +
+  geom_boxplot(aes(x = class, y = hwy, fill = class),
+               show.legend = F) +
+  labs(x = "Class", y = "Highway\nMPG") 
+```
+
+<br><br>
+
+# Question 2
+
+Provide ggplot codes to replicate the given figures in  Q2a, Q2b, and Q2c.
+
+## Q2a.
+
+Below is the data.frame for Q2a:
+
+```{r}
+hdi_corruption <- read_csv(
+  'https://bcdanl.github.io/data/hdi_corruption.csv')
+```
+
+
+*Answer*:
+
+```{r hdi}
+#| fig-width: 9
+#| fig-height: 7
+#| warning: false
+
+country_list<- c("Argentina", "China", "Egypt", "Greece", "South Africa", "United States", "Germany", "Singapore", "Norway", "Senegal")
+
+hdi_corruption <- hdi_corruption |> 
+  filter(year == 2014) |> 
+  mutate(country = ifelse(country %in% country_list, country, ""))
+
+c <-ggplot(hdi_corruption, aes(x=cpi, y=hdi))+ geom_point((aes(color = region, size = 0.6, alpha = 0.5)))+
+  geom_smooth(se=FALSE, formula = y ~ log(x), method = lm)+
+  theme(legend.position = "top")+
+  geom_text_repel(aes(label = country)) +
+  labs(color = "Region", x = "Corruption Perceptions Index, 2014 (100 = least corrupt)", y = "Human Development Index, 2014 (1.0 = most developed" )
+plot(c)
+
+# problems:points larger and slightly transparent,
+ 
+  
+```
+```
+```
+
+<br><br>
+
+## Q2b
+
+-   Download the file `labor_supply.zip` from the Google Drive. Then, extract `labor_supply.zip`, so that you can access the `labor_supply.csv` file.
+
+-   Variable description in `labor_supply.csv`
+
+    -   `SEX`: 1 if Male; 2 if Female; 9 if NIU (Not in universe)
+    -   `NCHLT5`: Number of own children under age 5 in a household; 9 if 9+
+    -   `LABFORCE`: 0 if NIU or members of the armed forces; 1 if not in the labor force; 2 if in the labor force.
+    -   `ASECWT`: sample weight
+    
+    
+- A sample weight of each observation means how much population each observation represents.
+  - If you sum `ASECWT` for each year, you get the size of yearly population in the US.
+  
+  
+- Households with `LABFORCE == 0` is not in labor force.
+
+
+- Labor force participation rate can be calculated by:
+
+$$
+(\text{Labor Force Participation Rate}) \, = \, \frac{(\text{Size of population in labor force})}{(\text{Size of civilian population that are not members of the armed force})}
+$$
+
+*Answer*:
+
+```{r labor-supply}
+#| fig-width: 9
+#| fig-height: 7
+#| warning: false
+b<- read_csv("/Users/isabellanicastro/Downloads/labor_supply.csv")
+
+b <- b |> 
+  filter(LABFORCE != 0)
+
+b$has_children <- ifelse(b$NCHLT5 == 0, "No Child Under Age 5 in Household", "Having Children Under Age 5 in Household")
+b$in_labor_force <- ifelse(b$LABFORCE == 2, 1, 0)
+b$SEX <- ifelse(b$SEX == 1, "Male", "Female")
+
+b_sum <- b |>
+  group_by(has_children, SEX, YEAR)|>
+  summarise(LPR = (sum(ASECWT * in_labor_force))/sum(ASECWT) ) |>
+  mutate(has_children = factor(has_children,
+                               levels = c("Having Children Under Age 5 in Household",  "No Child Under Age 5 in Household")))
+
+b_sum_2022 <- b_sum |> 
+  filter(YEAR == 2022)
+
+b_graph <- ggplot(b_sum, aes(x= YEAR, y= LPR))+
+  geom_line(show.legend = FALSE, aes(color= factor(SEX), size= 1))+
+  geom_label_repel(data = b_sum_2022, aes(label = as.character(SEX)), box.padding = 2)+
+  scale_x_continuous(breaks = seq(1982, 2022, 4))+ 
+  scale_y_continuous(labels = scales::percent)+
+  facet_wrap(has_children ~.)+
+  labs( x= "Year", y= "Labor Force Participation Rate", Title = "Fertility and Labor Supply in the U.S.", subtitle= "1982-2022", caption= "Data:IPUMS-CPS, University of Minnesota, www.jpums.org" )
+b_graph
+
+
+```
+
+<br><br>
+
+
+```
+```{r
+
+<br><br>
+
+## Q2c
+
+Below is the data.frame for Q2c:
+```{r}
+#| echo: true
+#| eval: true
+
+# install.packages("ggcorrplot")
+library(ggcorrplot) # to create correlation heatmaps using ggcorrplot()
+beer_mkt <- read_csv('https://bcdanl.github.io/data/beer_markets.csv')
+
+rmarkdown::paged_table(beer_mkt)
+```
+
+-   Make a correlation heat-map with variables that are either strongly correlated or `promo`-related.
+  - The variables are selected by how high the mean value of the absolute value of correlations with the variable is (top 13-15 variables).
+  - You can start with the data.frame, `beer_dummies`:
+  
+```{r}
+#| echo: true
+#| eval: false
+
+beer_dummies <- beer_mkt %>% select(-hh, -market) 
+reg <- lm(data = beer_dummies,
+          beer_floz ~ .)
+beer_dummies <-  as.data.frame(model.matrix(reg))[, -1]
+beer_dummies <- cbind(beer_mkt$beer_floz ,beer_dummies)
+beer_dummies <- beer_dummies %>% 
+  rename(beer_floz = `beer_mkt$beer_floz`)
+
+
+
+colnames(beer_dummies)
+colnames(beer_1)
+
+beer_1 <- beer_dummies |> 
+  select(dollar_spent, beer_floz, price_per_floz, `brandBUSCH LIGHT`, `brandCOORS LIGHT`, `brandMILLER LITE`, `brandNATURAL LIGHT`, `containerNON REFILLABLE BOTTLE`, promoTRUE, buyertypemarried, children6to17TRUE, `age50+`, employmentnone) |> 
+  mutate(`BUD LIGHT` = ifelse(`brandBUSCH LIGHT`+ `brandCOORS LIGHT`+ `brandMILLER LITE`+ `brandNATURAL LIGHT`== 0, 1, 0) )|> 
+  rename(`BUSCH LIGHT`=`brandBUSCH LIGHT`,
+         `COORS LIGHT`=`brandCOORS LIGHT`,
+         `MILLER LITE`=`brandMILLER LITE`,
+         `NATURAL LIGHT`=`brandNATURAL LIGHT`,
+         `NON REFILLABLE BOTTLE`= `containerNON REFILLABLE BOTTLE`) |> 
+  relocate(dollar_spent, beer_floz, price_per_floz,`BUD LIGHT`, `BUSCH LIGHT`,  
+           `COORS LIGHT`, `MILLER LITE`,  `NATURAL LIGHT`, `NON REFILLABLE BOTTLE`, 
+           promoTRUE, buyertypemarried, children6to17TRUE, `age50+`, employmentnone)
+
+corr <- cor(beer_1)
+
+library(ggcorrplot)
+
+ggcorrplot(corr,
+          lab = TRUE)+
+  theme(legend.key.height = unit(1, "inch"))
+
+```
+
+- To calculate a correlation between numeric variables in `data.frame`, use `cor(data.frame)`
+
+- Then, make a correlation heat-map for NY markets with the same selection of variables.
+  - NY markets are such that whose `market` value is either `ALBANY`, `BUFFALO-ROCHESTER`, `URBAN NY`, `SUBURBAN NY`, `EXURBAN NY`, `RURAL NEW YORK`, or `SYRACUSE`.
+
+*Answer*:
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+beer_dummies <- beer_mkt |> 
+  filter(market %in% c("ALBANY", "BUFFALO-ROCHESTER", "URBAN NY", "SUBURBAN NY", "EXURBAN NY", "RURAL NEW YORK", "SYRACUSE") ) |> 
+  select(-hh, -market) 
+reg <- lm(data = beer_dummies,
+          beer_floz ~ .)
+
+
+beer_mkt_NY <- beer_mkt |> 
+  filter(market %in% c("ALBANY", "BUFFALO-ROCHESTER", "URBAN NY", "SUBURBAN NY", "EXURBAN NY", "RURAL NEW YORK", "SYRACUSE") )
+
+beer_dummies <-  as.data.frame(model.matrix(reg))[, -1]
+beer_dummies <- cbind(beer_mkt_NY$beer_floz ,beer_dummies)
+beer_dummies <- beer_dummies %>% 
+  rename(beer_floz = `beer_mkt_NY$beer_floz`)
+
+
+beer_1 <- beer_dummies |> 
+  select(dollar_spent, beer_floz, price_per_floz, `brandBUSCH LIGHT`, `brandCOORS LIGHT`, `brandMILLER LITE`, `brandNATURAL LIGHT`, `containerNON REFILLABLE BOTTLE`, promoTRUE, buyertypemarried, children6to17TRUE, `age50+`, employmentnone) |> 
+  mutate(`BUD LIGHT` = ifelse(`brandBUSCH LIGHT`+ `brandCOORS LIGHT`+ `brandMILLER LITE`+ `brandNATURAL LIGHT`== 0, 1, 0) )|> 
+  rename(`BUSCH LIGHT`=`brandBUSCH LIGHT`,
+         `COORS LIGHT`=`brandCOORS LIGHT`,
+         `MILLER LITE`=`brandMILLER LITE`,
+         `NATURAL LIGHT`=`brandNATURAL LIGHT`,
+         `NON REFILLABLE BOTTLE`= `containerNON REFILLABLE BOTTLE`) |> 
+  relocate(dollar_spent, beer_floz, price_per_floz,`BUD LIGHT`, `BUSCH LIGHT`,  
+           `COORS LIGHT`, `MILLER LITE`,  `NATURAL LIGHT`, `NON REFILLABLE BOTTLE`, 
+           promoTRUE, buyertypemarried, children6to17TRUE, `age50+`, employmentnone)
+
+corr <- cor(beer_1)
+
+ggcorrplot(corr,
+          lab = TRUE)+
+  theme(legend.key.height = unit(1, "inch"))
+```
+
+  
+
+<!-- References: -->
+
+<!-- -   [Fundamentals of Data Visualization by Claus O. Wilke](https://clauswilke.com/dataviz) -->
+<!-- -   [Data Visualization: A practical introduction by Kieran Healy](https://socviz.co) -->
