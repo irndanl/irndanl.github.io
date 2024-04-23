@@ -72,7 +72,7 @@
   {
     "objectID": "Nicastro_HW1.html",
     "href": "Nicastro_HW1.html",
-    "title": "ggplot",
+    "title": "Data Visualization 1",
     "section": "",
     "text": "Question 1 homework #1\n\nncdc_temp &lt;- read_csv('https://bcdanl.github.io/data/ncdc_temp_cleaned.csv')\ndate_selected &lt;- c('0000-01-01','0000-04-01','0000-07-01','0000-10-01','0000-12-31')\ndf &lt;- filter(ncdc_temp, date %in% date_selected)\np &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes( x = date,\n                   y = temperature ) )\n\np + geom_line( aes( color = location ),show.legend = F) +\n  geom_point(data = df) +\n  labs(x = 'month') + \n  scale_x_date(breaks = as.Date(date_selected),\n               date_labels = \"%b\")\n\n\n\n\nggplot is a data visualization tool\n\nggplot(mpg) +\n  geom_boxplot(aes(x=class,y=hwy))\n\n\n\n\nQuestion 2 homework #1\n\np_1 &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes(x = temperature,\n                  y = month))\np_1 + geom_boxplot(fill = \"grey70\") +\n  labs(x = NULL) +\n  coord_flip()\n\n\n\n\nQuestion 3 Homework #1\n\nlibrary(ggridges)\n\np &lt;- ggplot(data = ncdc_temp,\n            mapping = \n              aes(x = temperature,\n                  y = month))\np + geom_density_ridges(alpha = 0.3, fill = \"blue\")\n\n\n\n\n\ncars &lt;- mtcars\n\nc&lt;- ggplot(cars, aes(disp, mpg)) +\n        geom_point(aes(color = hp))\nc + labs(x= \"displacement\")+ labs(y= \"fuel efficiency\")\n\n\n\n\n\npopgrowth_df &lt;- read_csv(\n  'https://bcdanl.github.io/data/popgrowth.csv')\n\n\npg&lt;- ggplot(popgrowth_df, aes(reorder(state, popgrowth), popgrowth, fill = region)) +\n        geom_bar(stat = \"identity\", position = \"dodge\") +\n        coord_flip() +\n        theme(legend.position = c(0.8, 0.2))\n\npg + labs(y= \"population growth 2000 to 2010\")+ labs(x= \"reorder state, pop growth\")\n\n\n\n\n\nmale_Aus &lt;- read_csv(\n  'https://bcdanl.github.io/data/aus_athletics_male.csv')\n\nma&lt;- ggplot(male_Aus, aes(x=height, y= pcBfat, group=sport)) +\n  geom_point(aes(shape=sport, color= sport)) + \n  scale_color_manual(values = c('red','grey','grey','grey','grey'))\n\nma + labs(x= \"height(cm)\")+ labs(y= \"% body fat\")\n\n\n\n\n\ntitanic &lt;- read_csv(\n  'https://bcdanl.github.io/data/titanic_cleaned.csv')\n\n# t &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(titanic$age)\nt_2 &lt;- titanic %&gt;% mutate(sex = 'female')\nt_3 &lt;- titanic %&gt;% mutate(sex = 'male')\nt4 &lt;- rbind(t_2, t_3)\n\nggplot( mapping= aes(x=age, y = stat(count) ) )  + geom_density(data = t4, fill = 'grey',color = 'grey') + geom_density(data = titanic, aes(fill=sex)) + facet_wrap(sex~.)\n\n\n\n\n\ncows_filtered &lt;- read_csv(\n  'https://bcdanl.github.io/data/cows_filtered.csv')\n\nt &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(cows_filtered$butterfat)\nggplot(cows_filtered, aes(x=butterfat, fill=breed, color = breed)) + geom_density(alpha=0.25)"
   },
@@ -95,6 +95,181 @@
     "href": "blog-listing.html",
     "title": "Insightful Analytics",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n  \n\n\n\n\nStarwars\n\n\n\n\n\n\n\n\n\nOct 30, 2023\n\n\nYour Name\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\n\n\nOct 30, 2023\n\n\nYOUR NAME\n\n\n1 min\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\n\n\nOct 27, 2023\n\n\nYOUR NAME\n\n\n1 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n  \n\n\n\n\nData Visualization 1\n\n\n\n\n\n\n\n\n\nFeb 21, 2024\n\n\nIsabella Nicastro\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\n\n\nOct 30, 2023\n\n\nYOUR NAME\n\n\n1 min\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\n\n\nOct 27, 2023\n\n\nYOUR NAME\n\n\n1 min\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/homework1/homework_1.html",
+    "href": "posts/homework1/homework_1.html",
+    "title": "Data Visualization 1",
+    "section": "",
+    "text": "Question 1 homework #1\n\nncdc_temp &lt;- read_csv('https://bcdanl.github.io/data/ncdc_temp_cleaned.csv')\n\nRows: 1464 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (4): station_id, month, flag, location\ndbl  (2): day, temperature\ndate (1): date\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\ndate_selected &lt;- c('0000-01-01','0000-04-01','0000-07-01','0000-10-01','0000-12-31')\ndf &lt;- filter(ncdc_temp, date %in% date_selected)\np &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes( x = date,\n                   y = temperature ) )\n\np + geom_line( aes( color = location ),show.legend = F) +\n  geom_point(data = df) +\n  labs(x = 'month') + \n  scale_x_date(breaks = as.Date(date_selected),\n               date_labels = \"%b\")\n\n\n\n\nggplot is a data visualization tool\n\nggplot(mpg) +\n  geom_boxplot(aes(x=class,y=hwy))\n\n\n\n\nQuestion 2 homework #1\n\np_1 &lt;- ggplot(data = ncdc_temp,\n            mapping =\n              aes(x = temperature,\n                  y = month))\np_1 + geom_boxplot(fill = \"grey70\") +\n  labs(x = NULL) +\n  coord_flip()\n\n\n\n\nQuestion 3 Homework #1\n\nlibrary(ggridges)\n\np &lt;- ggplot(data = ncdc_temp,\n            mapping = \n              aes(x = temperature,\n                  y = month))\np + geom_density_ridges(alpha = 0.3, fill = \"blue\")\n\nPicking joint bandwidth of 3.12\n\n\n\n\n\n\ncars &lt;- mtcars\n\nc&lt;- ggplot(cars, aes(disp, mpg)) +\n        geom_point(aes(color = hp))\nc + labs(x= \"displacement\")+ labs(y= \"fuel efficiency\")\n\n\n\n\n\npopgrowth_df &lt;- read_csv(\n  'https://bcdanl.github.io/data/popgrowth.csv')\n\nRows: 51 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (3): region, division, state\ndbl (4): pop2000, pop2010, popgrowth, area\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\npg&lt;- ggplot(popgrowth_df, aes(reorder(state, popgrowth), popgrowth, fill = region)) +\n        geom_bar(stat = \"identity\", position = \"dodge\") +\n        coord_flip() +\n        theme(legend.position = c(0.8, 0.2))\n\npg + labs(y= \"population growth 2000 to 2010\")+ labs(x= \"reorder state, pop growth\")\n\n\n\n\n\nmale_Aus &lt;- read_csv(\n  'https://bcdanl.github.io/data/aus_athletics_male.csv')\n\nRows: 83 Columns: 13\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (2): sex, sport\ndbl (11): rcc, wcc, hc, hg, ferr, bmi, ssf, pcBfat, lbm, height, weight\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\nma&lt;- ggplot(male_Aus, aes(x=height, y= pcBfat, group=sport)) +\n  geom_point(aes(shape=sport, color= sport)) + \n  scale_color_manual(values = c('red','grey','grey','grey','grey'))\n\nma + labs(x= \"height(cm)\")+ labs(y= \"% body fat\")\n\n\n\n\n\ntitanic &lt;- read_csv(\n  'https://bcdanl.github.io/data/titanic_cleaned.csv')\n\nRows: 756 Columns: 4\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): class, sex\ndbl (1): age\nlgl (1): survived\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n# t &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(titanic$age)\nt_2 &lt;- titanic %&gt;% mutate(sex = 'female')\nt_3 &lt;- titanic %&gt;% mutate(sex = 'male')\nt4 &lt;- rbind(t_2, t_3)\n\nggplot( mapping= aes(x=age, y = stat(count) ) )  + geom_density(data = t4, fill = 'grey',color = 'grey') + geom_density(data = titanic, aes(fill=sex)) + facet_wrap(sex~.)\n\nWarning: `stat(count)` was deprecated in ggplot2 3.4.0.\nℹ Please use `after_stat(count)` instead.\n\n\n\n\n\n\ncows_filtered &lt;- read_csv(\n  'https://bcdanl.github.io/data/cows_filtered.csv')\n\nRows: 80 Columns: 3\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): age, breed\ndbl (1): butterfat\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\nt &lt;- data.frame(v1=rnorm(100),v2=rnorm(100,1,1),v3=rnorm(100,0,2))\n# data&lt;- melt(cows_filtered$butterfat)\nggplot(cows_filtered, aes(x=butterfat, fill=breed, color = breed)) + geom_density(alpha=0.25)"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "",
+    "text": "I solemnly swear that I will not cheat or engage in any form of academic dishonesty during this exam.\nI will not communicate with other students or use unauthorized materials.\nI will uphold the integrity of this exam and demonstrate my own knowledge and abilities.\nBy taking this pledge, I acknowledge that academic dishonesty undermines the academic process and is a violation of the trust placed in me as a student.\nI accept the consequences of any violation of this promise.\n\nStudent’s Name: Isabella Nicastro\nStudent’s ID:\nStudent’s Signature: Isabella Nicastro"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-banks_all",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-banks_all",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Description for Variables in banks_all",
+    "text": "Description for Variables in banks_all\n\nyear: Year\nmonth: Month\nday: Day\nbib6: The number of banks in business in the Sixth District\nbib8: The number of banks in business in the Eighth District\n\n\n\nbanks &lt;- read_csv('https://bcdanl.github.io/data/banks_ms.csv')"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-banks",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-banks",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Description for Variables in banks",
+    "text": "Description for Variables in banks\n\nyear: Year\nmonth: Month\nday: Day\ndistrict: District\n\nbib6: The Sixth District\nbib8: The Eighth District\ncounterfactual: The Sixth District Counterfactual. The counterfactual evolution of the number of banks in the Sixth District if the same number of banks had failed in that district after 1930 as did in the Eighth.\n\nn_banks: The number of banks in business"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1a",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1a",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q1a",
+    "text": "Q1a\n\nProvide your R code to create a new data.frame, bank7_1, which contains the observations with only July 1st for each year in the data.frame banks_all."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1b",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1b",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q1b",
+    "text": "Q1b\n\nProvide your R code to calculate the median, mean, and standard deviation of the number of banks in business in each district in the data.frame banks_all.\n\n\n\n\n\nData summary\n\n\nName\nbanks_all\n\n\nNumber of rows\n1878\n\n\nNumber of columns\n5\n\n\n_______________________\n\n\n\nColumn type frequency:\n\n\n\ncharacter\n1\n\n\nnumeric\n4\n\n\n________________________\n\n\n\nGroup variables\nNone\n\n\n\nVariable type: character\n\n\n\n\n\n\n\n\n\n\n\n\n\nskim_variable\nn_missing\ncomplete_rate\nmin\nmax\nempty\nn_unique\nwhitespace\n\n\n\n\nmonth\n0\n1\n3\n9\n0\n12\n0\n\n\n\nVariable type: numeric\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nskim_variable\nn_missing\ncomplete_rate\nmean\nsd\np0\np25\np50\np75\np100\nhist\n\n\n\n\nday\n0\n1\n15.68\n8.79\n1\n8\n16\n23\n31\n▇▇▇▇▆\n\n\nyear\n0\n1\n1931.57\n1.54\n1929\n1930\n1932\n1933\n1934\n▇▅▅▅▃\n\n\nbib6\n0\n1\n118.62\n13.89\n102\n105\n114\n133\n142\n▇▇▃▂▆\n\n\nbib8\n0\n1\n133.04\n22.68\n109\n111\n121\n165\n170\n▇▃▁▁▅"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1c.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1c.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q1c.",
+    "text": "Q1c.\n\nProvide the ggplot code to replicate the following ggplot figure that describes how the distribution of the number of banks in business varies by district.\n\nBlue color corresponds to the Sixth district.\nRed color corresponds to the Eighth district."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1d.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1d.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q1d.",
+    "text": "Q1d.\n\nProvide the ggplot code with the data.frame banks to replicate the following ggplot figure that describes the yearly trend of the number of banks in business for each district.\n\nThe dotted line is from the observation with “counterfactual” district value .\nThe logical condition district != \"counterfactual\" returns TRUE if the value of district is not equal to “counterfactual”.\nThe logical condition district != \"counterfactual\" returns FALSE if the value of district is equal to “counterfactual”.\nThe number of banks in business in this figure was measured on July 1st in each year."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1e.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q1e.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q1e.",
+    "text": "Q1e.\n\nConsidering the context of the data.frame, banks, and the ggplot figure in Q1d, make a detailed comment on the following questions:\n\nDescribe and compare the yearly trend of the number of banks in business depicted in the ggplot figure in Q1d.\nWhat would be the effect of the monetary policy on bank failures in Mississippi in July 1934?\nIn the given ggplot figure in Q1d, point out the magnitude of such effect."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#variable-description",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#variable-description",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Variable description",
+    "text": "Variable description\n\ncountry: factor with 142 levels\ncontinent: factor with 5 levels\nyear: ranges from 1952 to 2007 in increments of 5 years\nlifeExp: life expectancy at birth, in years\npop: population\n\ngdpPercap GDP per capita (US$, inflation-adjusted)"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2a.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2a.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q2a.",
+    "text": "Q2a.\n\nProvide ggplot code to replicate the following visualization that describes (1) the time trend of log10(gdpPercap) for each country and (2) the time trend of log10(gdpPercap) for each continent.\n\nThe time trend of log10(gdpPercap) for each continent, depicted by the blue curve, is from the prediction based on the data points of year and log10(gdpPercap).\nThe time trend of log10(gdpPercap) for each country, depicted by the “grey” curve, is from the data points of year and log10(gdpPercap) for that country."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2b.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2b.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q2b.",
+    "text": "Q2b.\n\nInterpret the visualization in Q2a."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#gdp-per-capita-has-changed-over-the-years-for-countries-within-each-continent.-each-panel-represents-one-continent-allowing-for-a-comparison-of-gdp-per-capita-trends-between-continents.-i-was-able-to-identify-differences-in-economic-development-trajectories-between-regions.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#gdp-per-capita-has-changed-over-the-years-for-countries-within-each-continent.-each-panel-represents-one-continent-allowing-for-a-comparison-of-gdp-per-capita-trends-between-continents.-i-was-able-to-identify-differences-in-economic-development-trajectories-between-regions.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "GDP per capita has changed over the years for countries within each continent. Each panel represents one continent, allowing for a comparison of GDP per capita trends between continents. I was able to identify differences in economic development trajectories between regions.",
+    "text": "GDP per capita has changed over the years for countries within each continent. Each panel represents one continent, allowing for a comparison of GDP per capita trends between continents. I was able to identify differences in economic development trajectories between regions."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2c.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2c.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q2c.",
+    "text": "Q2c.\n\nProvide ggplot code to replicate the following visualization that describes (1) the relationship between log10(gdpPercap) and lifeExp in year 2007, excluding the continent “Oceania”.\n\nThe size of dots varies by pop."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2d.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q2d.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q2d.",
+    "text": "Q2d.\n\nInterpret the visualization in Q2c.\n\nIn your interpretation, please explain the deviation of Nigeria from the overall relationship between log10(gdpPercap) and lifeExp in Africa. ## People in Nigeria specifically have a lower life expectancy then some of the people that live in Africa. The gdp is off from the baseline of Africa as well."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-titanic_1",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-titanic_1",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Description for Variables in titanic_1",
+    "text": "Description for Variables in titanic_1\n\nClass: Social class\nSex: Sex\nAge: Age\nSurvived: Survival status from the Titanic disaster.\n\n\n\n\ntitanic_2 &lt;- read_csv(\"https://bcdanl.github.io/data/titanic_2.csv\")"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-titanic_2",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#description-for-variables-in-titanic_2",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Description for Variables in titanic_2",
+    "text": "Description for Variables in titanic_2\n\npclass: Social class\nsex: Sex\nage: Age\nsurvived: Survival status from the Titanic disaster."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3a.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3a.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q3a.",
+    "text": "Q3a.\n\nProvide ggplot code with the titanic_1 data.frame to replicate the following visualization that describes how the distribution of Sex varies by Survived, Age, and Class."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3b.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3b.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q3b.",
+    "text": "Q3b.\nMake a detailed comment on the visualization in Q3a."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3c.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3c.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q3c.",
+    "text": "Q3c.\n\nProvide ggplot code with the titanic_2 data.frame to replicate the following visualization that describes how the distribution of age varies by survived, pclass, and sex.\n\nUse the following colors: #4c3642 and #d399e7.\nThe number of bins in each subplot is 25."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3d.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q3d.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q3d.",
+    "text": "Q3d.\nMake a detailed comment on the visualization in Q3c. In the 1st class there is a higher percentage of a female surviving compared to a male. As for the second class citizen females survive more than males but for third class it gets very high for the death rate of a male compared to female."
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4a",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4a",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q4a",
+    "text": "Q4a\n\nReplicate the following visualization"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4b",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4b",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q4b",
+    "text": "Q4b\n\nReplicate the following visualization\n\nHow is the story this visualization telling different than the story the plot in Q4a?"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4c",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4c",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q4c",
+    "text": "Q4c\n\nFirst, calculate the proportion of wrong, right, and don’t know answers in each region and then plot these proportions (rather than the counts) and then improve axis labeling.\n\n\nq4 &lt;- brexit |&gt; \n  group_by(region, opinion) |&gt;  \n  summarise(n = n()) |&gt; \n  mutate(tot = sum(n),\n         prop = n / tot ) \n\n\nReplicate the following visualization\n\nHow is the story this visualization telling different than the story the plot in Q4b?"
+  },
+  {
+    "objectID": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4d.",
+    "href": "Nicastro_Isabella_danl-399-midterm-makeup-.html#q4d.",
+    "title": "DANL 399: Data Visualization and Presentation",
+    "section": "Q4d.",
+    "text": "Q4d.\n\nRecreate the same visualization from the previous exercise, this time dodging the bars for opinion proportions for each region, rather than faceting by region and then improve the legend.\n\nHow is the story this visualization telling different than the story the previous plot tells?"
   }
 ]

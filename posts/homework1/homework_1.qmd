@@ -3,14 +3,8 @@ title: "Data Visualization 1"
 author: "Isabella Nicastro"
 date: "2024-02-21"
 categories: [ggplot, code, analysis]
-image: "image.png"
-
-execute: 
-  warning: false
-  message: false
-  
-toc: true
 ---
+
 ```{r}
 #| include: false
 
