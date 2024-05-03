@@ -8,7 +8,7 @@ website:
     pinned: true
     left:
       - text: Project
-        href: project.qmd
+        href: project-capstone.qmd
       - text: Project Proposal
         href: Nicastro-project-abstract.qmd
       - text: Blog

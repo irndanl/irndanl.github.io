@@ -1,0 +1,1046 @@
+---
+title: Determinants of Financial Literacy at SUNY Geneseo
+subtitle: ""
+author: 
+  - Alexis Kruzicki
+  - Isabella Nicastro
+  - Byeong-Hak Choe (Advisor)
+institute: 
+  - Accounting and Data Analytics
+  - Finance and Data Analytics
+  - Data Analytics and Economics
+date: last-modified
+categories: [financial-literacy, data-cleaning, machine-learning, data-visualization, r, quarto]
+
+toc: true
+toc-title: "Table of Contents"
+toc-depth: 3
+number-sections: true
+
+fig-width: 9
+
+execute:
+  code-tools: true
+  message: false
+  warning: false
+
+from: markdown+emoji
+---
+
+
+```{r}
+#| include: false
+
+library(knitr)
+library(rmarkdown)
+library(tidyverse)
+library(skimr)
+library(ggthemes)
+library(hrbrthemes)
+library(stargazer)
+library(margins)
+
+theme_set(theme_ipsum()+
+          theme(strip.background =element_rect(fill="lightgray"),
+                axis.title.x  = element_text(angle = 0,
+                                            size = rel(1.5),
+                                            margin = margin(10,0,0,0)),
+                axis.title.y  = element_text(angle = 0,
+                                            size = rel(1.5),
+                                            margin = margin(0,10,0,0))
+                )
+          )
+```
+
+> Through surveying the SUNY Geneseo student body, we plan to explore what determines the level of financial literacy among students at SUNY Geneseo. The survey contains questions that address students’ demographics, academic background, family support through college, personal finance experience, and a financial literacy quiz. The sample size is 403 respondents, which is 10% of the population at SUNY Geneseo. We have noticed many students struggling on campus with the basics of personal finance and want to address the growing concern of how this could affect their success through college and in the future. We are interested in how the students' family or academic background is associated with their financial literacy. Based on this exploration we plan to make some policy and curriculum suggestions on how we can improve the overall understanding of personal finance at SUNY Geneseo. Based on this research we plan to design a curriculum that will be offered to all students through the Geneseo Opportunities for Leadership Development (GOLD) program and will address the largest educational gaps that were identified in the survey. This course will be evaluated by administering the same financial literacy quiz following completion of the course and will offer insight into whether or not there is a substantial change in the students' personal finance knowledge. 
+
+
+<p align = "center">
+  <img src = "img/sob.png" width = "300px"><img src = "img/gold.jpeg" width = "300px">
+</p>
+# Introduction
+
+## Survey Design
+
+### Survey Questionaire
+
+This survey is being commissioned by the SUNY Geneseo School of Business in partnership with the Geneseo Opportunities for Leadership Development (GOLD) program to gauge the financial literacy of the college's student body. The college feels strongly that every SUNY Geneseo student regardless of background or area of academic interest should feel empowered with knowledge on how to manage their personal finances and make good financial decisions. This survey will help the School of Business in its development of financial literacy programming for the benefit all students. 
+
+1. Student Geneseo Email Address	
+2. What year did you graduate high school?	
+3. What NY county did you graduate high school from? 
+5. Choose which option encapsulates the most of your high school education.	
+6. Year at SUNY Geneseo?	
+7. Are you a transfer student?	
+8. Undergraduate Major(s)	
+9. Undergraduate Minor(s)/ Concentration(s)	
+10. Pre-Professional Program(s)	
+11. Graduate Degree	
+12. What would you rate your personal finance knowledge?	
+13. How old were you when you got your first job?	
+14. Did you file your own taxes in 2023?	
+15. Did a parent or family member set up a college fund for you to help you afford your education?	
+16. Do your parents/ guardians work, or have worked, in finance, banking, insurance, or real estate?	
+17. Do you have a credit card under your name?	
+18. If you do have a credit card, how old were you when you first got your own credit card?	
+19. Do you pay rent? 	
+20. Do you own a house?	
+21. Do you make car payments? 	
+22. Do you currently have a brokerage, individual retirement account (IRA), or other savings account where you invest your money in stocks, bonds, CDs, options, crypto-currency, or other liquid market asset?
+23. Did you take any version of a personal finance course prior to attending college?For example, a class in high school or Junior Achievement.	Have you ever taken a Finance course at SUNY Geneseo?	
+25. Quizzes
+  - Suppose that by the beginning of year 2026 your income has doubled and prices of all goods have doubled too. 
+  - In 2026, how much will you be able to buy with your 2026 income?	
+  - True or False: A 15 year mortgage typically requires higher monthly payments than a 30 year mortgage but the total interest over the life of the loan tends to be less. 	
+  - When you invest in an employer's retirement savings plan such as a 401(k), your contributions are taxed:	
+  - In general, investments that are riskier tend to provide higher returns over time that investments with less risk.	
+  - Suppose you have $100 in a savings account earning 2 percent interest compounded annually. After 5 years, how much would you have? 	
+  - Which of the following statements about Annual Percentage Rate (APR) is correct? 	
+  - Why is it important to save money?	
+  - If a self study personal finance course was offered as a GOLD certificate at SUNY Geneseo would you be interested?						
+
+# Data
+## Preparation of Data
+
+```{r}
+#| warning: false
+#| message: false
+#| results: asis
+
+table <- read_csv("Items.csv")
+
+DT::datatable(table)
+
+```
+
+```{r}
+df <- read_csv("survey-raw.csv")
+
+var_desc <- colnames(df)
+colnames(df) <- c("time_stamp",
+                  "email",
+                  "score",
+                  "grad_yr",
+                  "county",
+                  "year_geneseo",
+                  "transfer",
+                  "major",
+                  "minor",
+                  "prof_program",
+                  "graduate_degree",
+                  "self_eval",
+                  "age_first_job",
+                  "file_tax",
+                  "college_fund",
+                  "parent_job",
+                  "credit_card",
+                  "age_credit_card",
+                  "pay_rent",
+                  "own_house",
+                  "car_payment",
+                  "brokerage_acct",
+                  "fnce_course_b4",
+                  "fnce_course_geneseo",
+                  "q1_inflation",
+                  "q2_mortgage_int",
+                  "q3_401k",
+                  "q4_risk_return",
+                  "q5_comp_int",
+                  "q6_apr",
+                  "q7_trap",
+                  "gold")
+
+
+major_cat <- read_csv('major_category.csv')
+minor_cat <- read_csv('minor_category.csv')
+
+major_1_cat <- major_cat |> 
+  select(ends_with('1')) |> 
+  distinct() |> 
+  rename(dept_major_1 = dept_1)
+major_2_cat <- major_cat |> 
+  select(ends_with('2')) |> 
+  distinct() |> 
+  rename(dept_major_2 = dept_2)
+
+minor_1_cat <- minor_cat |> 
+  select(ends_with('1')) |> 
+  distinct() |> 
+  rename(dept_minor_1 = dept_1)
+minor_2_cat <- minor_cat |> 
+  select(ends_with('2')) |> 
+  distinct() |> 
+  rename(dept_minor_2 = dept_2)
+
+
+df_clean <- df |> 
+  filter(is.na(q7_trap) | q7_trap == "To prepare for unexpected expenses") |> 
+  mutate(score = as.integer(str_sub(score, 1, 1))) |> 
+  mutate(year_geneseo = case_when(str_detect(year_geneseo, "First") ~ "First",
+                                  str_detect(year_geneseo, "Second") ~ "Second",
+                                  str_detect(year_geneseo, "Third") ~ "Third",
+                                  str_detect(year_geneseo, "Fourth") ~ "Fourth",
+                                  str_detect(year_geneseo, "Grad") ~ "Grad",
+                                  str_detect(year_geneseo, "Prefer") ~ NA,
+                                  )) |> 
+  mutate(age_first_job_raw = age_first_job, .after = age_first_job) |> 
+  mutate(age_first_job = case_when(str_detect(age_first_job, "15") ~ "15",
+                                  str_detect(age_first_job, "16") ~ "16",
+                                  str_detect(age_first_job, "17") ~ "17",
+                                  str_detect(age_first_job, "18") ~ "18",
+                                  str_detect(age_first_job, "19") ~ "19",
+                                  str_detect(age_first_job, "20") ~ "20",
+                                  str_detect(age_first_job, "Prefer") ~ NA,
+                                  )
+         ) |> 
+  mutate(file_tax = case_when(str_detect(file_tax, "Done") ~ "Yes",
+                                  str_detect(file_tax, "I did not") ~ "No",
+                                  str_detect(file_tax, "My parents") ~ "Parents",
+                                  str_detect(file_tax, "My accountant") ~ "Parents",
+                                  str_detect(file_tax, "My family") ~ "Parents",
+                                  str_detect(file_tax, "Yes") ~ "Yes",
+                                  str_detect(file_tax, "No") ~ "No",
+                                  str_detect(file_tax, "Prefer") ~ NA,
+                                  )) |> 
+  select(-(time_stamp:email)) |> 
+  select(-q7_trap) |> 
+  mutate(id_respondent = row_number(), .before = 1) |>
+  mutate(year_geneseo = ifelse(!is.na(graduate_degree), 
+                               "Grad", year_geneseo) ) |> 
+  mutate(year_upper_lower = ifelse(year_geneseo == 'First' | 
+                                     year_geneseo == 'Second',
+                                   'Underclassmen', 
+                                   ifelse(year_geneseo == "Grad",
+                                          'Graduates', 'Upperclassmen')),
+         .after = year_geneseo
+         ) |> 
+  # Alexis
+  mutate(credit_card = case_when(str_detect(credit_card, "I use my parent's credit card") ~ "Parents",
+                                  str_detect(credit_card, "Yes") ~ "Yes",
+                                  str_detect(credit_card, "No") ~ "No",
+                                  str_detect(credit_card, "Prefer") ~ NA,
+                                  )) |>
+  mutate(age_credit_card = case_when(str_detect(age_credit_card, "Before age 18") ~ "b_18",
+                                  str_detect(age_credit_card, "At or after age 18") ~ "a_18",
+                                  str_detect(age_credit_card, " 
+I never owned a credit card") ~ "Never",
+                                  str_detect(age_credit_card, "Prefer") ~ NA
+                                  )) |> 
+  mutate(pay_rent = case_when(str_detect(pay_rent, "Live on campus") ~ "On_Campus",
+                                  str_detect(pay_rent, "Yes") ~ "Yes",
+                                  str_detect(pay_rent, "No") ~ "No",
+                                  str_detect(pay_rent, "Prefer") ~ NA,
+                                  ))|>
+  mutate(own_house = case_when(str_detect(own_house, "Yes") ~ "Yes",
+                                  str_detect(own_house, "No") ~ "No",
+                                  str_detect(own_house, "Prefer") ~ NA,
+                                  ))|>
+  mutate(car_payment = case_when(str_detect(car_payment, "Yes") ~ "Yes",
+                                  str_detect(car_payment, "No") ~ "No",
+                                  str_detect(car_payment, "Prefer") ~ NA,
+                                  )) |> 
+  mutate(score_pf = ifelse(score >= 4, 1, 0), .after = score) |> 
+  relocate(self_eval, .after = score_pf) |> 
+  mutate(score_scaled = scale(score), .after = score_pf) |> 
+  mutate(self_eval_scaled = scale(self_eval), .after = self_eval) |> 
+  mutate(over_confidence = self_eval_scaled - score_scaled, .after = score_pf) |> 
+  mutate(MSA = case_when(  # https://dol.ny.gov/new-york-state-geography
+    str_detect(county, paste(c("Albany", "Rensselaer", "Saratoga", "Schenectady", "Schoharie"), collapse = '|') ) ~ "Albany-Schenectady-Troy",
+    str_detect(county, paste(c("Broome", "Tioga"), collapse = '|') ) ~ "Binghamton",
+    str_detect(county, paste(c("Erie", "Niagara"), collapse = '|') ) ~ "Buffalo-Niagara Falls",
+    str_detect(county, paste(c("Chemung"), collapse = '|') ) ~ "Elmira",
+    str_detect(county, paste(c("Warren", "Washington"), collapse = '|') ) ~ "Glens Falls",
+    str_detect(county, paste(c("Tompkins"), collapse = '|') ) ~ "Ithaca",
+    str_detect(county, paste(c("Kingston"), collapse = '|') ) ~ "Ulster",
+    str_detect(county, paste(c("Bronx", "Kings", "New York", "Queens", "Richmond"), collapse = '|') ) ~ "New York City Metropolitan Area",
+    str_detect(county, paste(c("Orange", "Rockland", "Westchester"), collapse = '|') ) ~ "Orange-Rockland-Westchester",
+    str_detect(county, paste(c("Livingston", "Monroe", "Ontario", "Orleans", "Wayne", "Yates"), collapse = '|') ) ~ "Rochester",
+    str_detect(county, paste(c("Madison", "Onondaga", "Oswego"), collapse = '|') ) ~ "Syracuse",
+    str_detect(county, paste(c("Herkimer", "Oneida"), collapse = '|') ) ~ "Utica-Rome",
+    str_detect(county, paste(c("Jefferson"), collapse = '|') ) ~ "Watertown-Fort Drum",
+    str_detect(county, paste(c("Dutchess", "Putnam"), collapse = '|') ) ~ "Dutchess-Putnam",
+    str_detect(county, paste(c("Nassau", "Suffolk"), collapse = '|') ) ~ "Nassau-Suffolk",
+    str_detect(county, paste(c("high school"), collapse = '|') ) ~ "Outside NY",
+    str_detect(county, paste(c("Allegany", "Cattaraugus", "Cayuga", "Chautauqua",
+                               "Chenango", "Clinton", "Columbia", "Cortland",
+                               "Delaware", "Essex", "Franklin", "Fulton",
+                               "Genesee", "Greene", "Hamilton", "Lewis",
+                               "Montgomery", "Otsego", "Saint Lawrence", "Schuyler",
+                               "Seneca", "Steuben", "Sullivan", "Wyoming"), collapse = '|') ) ~ "Non-MSA",
+    ), .after = county
+    ) |> 
+  mutate(college_fund = case_when(
+    college_fund == "No" ~ "No",
+    college_fund == "Parents Pay for college tuition" ~ "Yes",
+    college_fund == "Prefer to not respond" ~ "Prefer to not respond",
+    college_fund == "They set up a savings account with my own money" ~ "Yes",
+    college_fund == "Yes" ~ "Yes",
+    college_fund == "Yes, but got used for a car instead" ~ "Yes",
+    college_fund == "military/educational benefits" ~ "Yes",
+    college_fund == "not sure" ~ "Prefer to not respond"
+  )) |> 
+  mutate(prof_program_TF = ifelse(is.na(prof_program),
+                                  0, 1), .after = prof_program) |> 
+  mutate(parent_job_TF = case_when(
+    parent_job == "Accounting" ~ 1,
+    parent_job == "Insurance" ~ 1,
+    parent_job == "No" ~ 0,
+    parent_job == "One parent used to work for a bank for 17+ years" ~ 1,
+    parent_job == "Prefer to not respond" ~ NA,
+    parent_job == "Yes" ~ 0,
+    parent_job == "healthcare and Law" ~ 0,
+    parent_job == "mom is partly involved in real estate" ~ 1,
+    parent_job == "mom used to" ~ 1,
+    parent_job == "my dad is a mortgage broker" ~ 1,
+  ), .after = parent_job) |> 
+  mutate(age_18_card = ifelse(age_credit_card == 'a_18',
+                              1, 
+                              ifelse(age_credit_card == 'b_18',
+                                     0, NA)),
+         .after = age_credit_card) |> 
+  mutate(own_house = ifelse(own_house == "No", 0, 1)) |> 
+  mutate(car_payment = ifelse(car_payment == 'No',
+                              0, 
+                              ifelse(car_payment == 'Yes',
+                                     1, NA)),
+         fnce_course_b4 = ifelse(fnce_course_b4 == 'No',
+                              0, 
+                              ifelse(fnce_course_b4 == 'Yes',
+                                     1, NA)),
+         fnce_course_geneseo = ifelse(fnce_course_geneseo == 'No',
+                               "0", 
+                               ifelse(fnce_course_geneseo == 'Yes, only one course',
+                                     "1", 
+                                     ifelse(fnce_course_geneseo == 'Yes, more than one course', "More_than_1", NA))),
+         ) |> 
+  mutate(brokerage_acct = ifelse(brokerage_acct == "I am using a financial advisor to invest my savings, unsure of the status of that", "No", brokerage_acct),
+         brokerage_acct = ifelse(str_detect(brokerage_acct, "I never set any of this up"), "No", brokerage_acct),
+         brokerage_acct = ifelse(str_detect(brokerage_acct, "Teacher's Retirement"), "No", brokerage_acct),
+         brokerage_acct = ifelse(str_detect(brokerage_acct, "No, however am currently in process of doing so"), "No", brokerage_acct),
+         q_IRA = ifelse(str_detect(brokerage_acct, "IRA"), 1, 0),
+         q_stock = ifelse(str_detect(brokerage_acct, "stock"), 1, 0),
+         q_CDs = ifelse(str_detect(brokerage_acct, "CDs"), 1, 0),
+         q_brockerage = ifelse(str_detect(brokerage_acct, "brockerage"), 1, 0),
+         q_bonds = ifelse(str_detect(brokerage_acct, "bonds"), 1, 0),
+         q_options = ifelse(str_detect(brokerage_acct, "options"), 1, 0),
+         q_crypto = ifelse(str_detect(brokerage_acct, "crypto"), 1, 0),
+         q_yes = ifelse(brokerage_acct == "No", 0, 
+                        ifelse(brokerage_acct == "Prefer to not respond", NA, 1)),
+         .before = brokerage_acct
+         ) |> 
+  separate(major, into = c('major_1', 'major_2'),
+           sep = ', ') |> 
+  separate(minor, into = c('minor_1', 'minor_2'),
+           sep = ', ') |> 
+  relocate(grad_yr, .before = year_geneseo) |> 
+  relocate(major_1, major_2, .after = year_upper_lower) |> 
+  relocate(minor_1, minor_2, .after = major_2) 
+
+df_clean <- df_clean |> 
+  left_join(major_1_cat) |>
+  left_join(major_2_cat) |> 
+  left_join(minor_1_cat) |> 
+  left_join(minor_2_cat |> filter(!is.na(minor_2))) |> 
+  mutate(minor_2 = ifelse(minor_1 == "anthropology and biology",
+                          "Biology", minor_2),
+         minor_2 = ifelse(minor_1 == "sustainability studies and biology",
+                          "Biology", minor_2)
+         ) |>
+  relocate(dept_major_1, .after = major_1) |>
+  relocate(dept_major_2, .after = major_2) |>
+  relocate(dept_minor_1, .after = minor_1) |>
+  relocate(dept_minor_2, .after = minor_2) |> 
+  mutate(transfer = ifelse(transfer == "Yes", 1, 0)) |> 
+  select(-age_first_job_raw, -parent_job, -age_credit_card,
+         -brokerage_acct) |> 
+  mutate(q1_inflation = ifelse(q1_inflation == "The same amount as today", 1, 0),
+         q2_mortgage_int = ifelse(q2_mortgage_int == "TRUE", 1, 0),
+         q3_401k = ifelse(str_detect(q3_401k, "Either before"), 1, 0),
+         q4_risk_return = ifelse(q4_risk_return == "TRUE", 1, 0),
+         q5_comp_int = ifelse(q5_comp_int == "More than $102", 1, 0),
+         q6_apr = ifelse(str_detect(q6_apr, "It is calculated by multiplying"), 1, 0),
+         age_first_job = as.integer(age_first_job),
+         college_fund = ifelse(college_fund == "Yes", 1,
+                               ifelse(college_fund == "No", 0 , NA)),
+         age_18_card = ifelse(is.na(age_18_card), 0 , age_18_card)
+         ) |> 
+  mutate(major = "", .after = year_upper_lower) |> 
+  mutate(
+         major = ifelse(dept_major_1 == "Education" | dept_major_2 == "Education",
+                        "Education", major),
+
+         major = ifelse(dept_major_1 == "School of Business" | dept_major_2 == "School of Business", "School of Business", major)
+  ) |> 
+  filter(grad_yr != "Received a GED") |> 
+  mutate(major = ifelse( dept_major_1 %in% c("Biology", 
+                                             "Mathematics",
+                                             "Geology", 
+                                             "Chemistry", 
+                                             "Neuroscience", 
+                                             "Geography",
+                                             "Physics",
+                                             "Geography and Sustainability Studies"), 
+                         "STEM", major),
+         major = ifelse( dept_major_2 %in% c("Biology", 
+                                             "Mathematics",
+                                             "Geology", 
+                                             "Chemistry", 
+                                             "Neuroscience", 
+                                             "Geography",
+                                             "Physics",
+                                             "Geography and Sustainability Studies"), 
+                         "STEM", major))
+
+df_clean <- df_clean |> 
+  mutate(major = ifelse(is.na(major) & dept_major_1 == "Education", "Education", major),
+         major = ifelse(is.na(major) & dept_major_2 == "Education", "Education", major),)
+
+
+df_clean <- df_clean |> 
+  mutate(major = ifelse(is.na(major), "Non-STEM", major),
+         major = ifelse(major == "", "Non-STEM", major)
+         )
+
+major_1_count <- df_clean |> 
+  count(dept_major_1) |> 
+  arrange(-n)
+
+major_2_count <- df_clean |> 
+  count(dept_major_2) |> 
+  arrange(-n)
+```
+
+
+```{r}
+df_clean_sum <- skim(df_clean) |> 
+  arrange(-n_missing)
+```
+
+
+```{r}
+#| warning: false
+df_clean |> 
+  mutate(grad_yr = factor(grad_yr, 
+                           levels = c("Prior to 2018", "2018", "2019", "2020", "2021", "2022", "2023"))) |> 
+  mutate(score_pf = ifelse(score_pf == 1, "Pass", "Fail")) |> 
+  filter(!is.na(grad_yr))|> 
+  ggplot(aes(fill = score_pf, y= grad_yr)) +
+  geom_bar(position = "fill") +
+  theme(legend.position = "top")+
+   scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  guides(fill = guide_legend(reverse = T)) +
+  labs(title = "Graduation Year Pass Rate", 
+       x = "Percentage Pass", 
+       y = "High School\n Graduation Year",
+       fill = "Financial Literacy Quiz")
+```
+
+
+
+```{r}
+DT::datatable(table)
+
+DT::datatable(df_clean |> 
+                mutate(over_confidence = round(over_confidence, 2),
+                       score_scaled = round(over_confidence, 2),
+                       self_eval_scaled = round(self_eval_scaled, 2)))
+```
+
+
+```{r}
+#| warning: false
+#| message: false
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(year_upper_lower)) |> 
+  mutate(score_pf = ifelse(score_pf == 1, "Pass", "Fail")) |>
+  ggplot(aes(fill =score_pf, x= year_upper_lower)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill")+
+  scale_y_continuous(labels = scales::percent)+
+  guides(fill= guide_legend(reverse  = TRUE))+
+  theme(legend.position = "top", 
+        plot.title = element_text(hjust = 0.5))+
+  labs(title = "Overall Pass Rate", 
+       x = "Percent Pass", 
+       y = "",
+       fill = "Financial Literacy Quiz")
+```
+
+
+
+```{r}
+#| warning: false
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(year_upper_lower)) |> 
+  mutate(SoB = ifelse(dept_major_1 == "School of Business", "SoB Student", "Not SoB Student")) |> 
+  filter(!is.na(SoB)) |> 
+  mutate(score_pf = ifelse(score_pf == 1, "Pass", "Fail")) |>
+  ggplot(aes(fill =score_pf, y= year_upper_lower)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill") +
+  facet_wrap(SoB~.) +
+  scale_x_continuous(labels = scales::percent)+
+  guides(fill= guide_legend(reverse  = TRUE))+
+  theme(legend.position = "top", 
+        plot.title = element_text(hjust = 0.5))+
+  labs(title = "SoB Pass Rate", 
+       x = "Percent Pass", 
+       y = "",
+       fill = "Financial Literacy Quiz")
+```
+
+
+```{r}
+#| warning: false
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(year_upper_lower),
+         !is.na(credit_card)) |> 
+  ggplot(aes(fill =score_pf, y= year_upper_lower)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill") +
+  facet_wrap(credit_card~.) +
+  theme(legend.position = "top")
+```
+
+
+```{r}
+df_clean_ML <- df_clean |> 
+  select(-id_respondent, 
+         -score, -score_scaled, 
+         -self_eval, -self_eval_scaled,
+         -county, -year_geneseo,
+         -major_1, -major_2, -minor_1, -minor_2,
+         -prof_program, -graduate_degree,
+  ) 
+
+```
+
+```{r}
+#| warning: false
+#| message: false
+library(maps)
+
+# maps::map('county', region = 'new york', col = "#5E610B")
+# map.axes(cex.axis=0.8) 
+# title(main = "New York State by Counties")
+
+ny_county_score <- df_clean |> 
+  group_by(county) |> 
+  summarize(score = mean(score),
+            n = n()) |> 
+  mutate(subregion = str_replace_all(county, " County", "")
+  ) |> 
+  mutate(subregion = ifelse(subregion == "Kings (Brooklyn)", "Kings", subregion),
+         subregion = ifelse(subregion == "New York (Manhattan)", "New York", subregion),
+         subregion = ifelse(subregion == "Richmond (Staten Island)", "Richmond", subregion),
+         subregion = ifelse(subregion == "Saint Lawrence", "St Lawrence", subregion),
+  ) |> 
+  mutate(subregion = str_to_lower(subregion)) |> 
+  filter(subregion != "i did not graduate from a high school in ny")
+
+states <- map_data("state")
+counties <- map_data("county")
+NewYork <- subset(states, region == "new york")
+# head(NewYork)
+
+ny_county <- subset(counties, region == "new york")
+# head(ny_county)
+
+
+ny_county_data <- ny_county |> 
+  left_join(ny_county_score)
+
+ggplot(ny_county_data) + 
+  geom_polygon(aes(x=long, y = lat, group = group, fill = n),
+               linewidth = .1, color = 'grey90') +
+  labs(title = "New York State by Counties", x = "longitude", y = "latitude") +
+  coord_fixed(1.3) +
+  scale_fill_gradient(low = "#9bbbae",
+                      high = "darkgreen",
+                      na.value = "white") +
+  theme_map() +
+  theme(panel.background = element_blank())+
+  labs(title = "Where Students Graduated High School", 
+       fill = "Number of Students")
+```
+
+```{r}
+#| warning: false
+
+df_clean |> 
+  mutate(grad_yr = factor(grad_yr, 
+                           levels = c("Prior to 2018", "2018", "2019", "2020", "2021", "2022", "2023"))) |> 
+  mutate(score_pf = ifelse(score_pf == 1, "Pass", "Fail")) |> 
+  filter(!is.na(grad_yr))|> 
+  ggplot(aes(fill = score_pf, y= grad_yr)) +
+  geom_bar(position = "fill") +
+  theme(legend.position = "top", 
+        plot.title = element_text(hjust = 0.5))+
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  guides(fill = guide_legend(reverse = T)) +
+  labs(title = "Graduation Year Pass Rate", 
+       x = "Percentage Pass", 
+       y = "High School\n Graduation Year",
+       fill = "Financial Literacy Quiz")
+```
+
+
+```{r}
+#| warning: false
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(age_first_job))|> 
+  ggplot(aes(fill =score_pf, y= age_first_job)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill") +
+  theme(legend.position = "top")
+```
+
+
+```{r}
+#| warning: false
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(file_tax))|> 
+  ggplot(aes(fill =score_pf, y= file_tax)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill") +
+  theme(legend.position = "top")
+```
+
+
+```{r}
+#| warning: false
+
+df_clean |> 
+  mutate(score_pf = factor(score_pf)) |> 
+  filter(!is.na(credit_card))|> 
+  ggplot(aes(fill =score_pf, y= credit_card)) +
+  scale_fill_manual(values = c("#9bbbae", "#065535"))+
+  geom_bar(position = "fill") +
+  theme(legend.position = "top")
+
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+df_clean |> 
+  mutate(score = factor(score)) |> 
+  filter(!is.na(year_upper_lower)) |> 
+  ggplot(aes(fill =score, x= year_upper_lower)) +
+   scale_fill_manual(values = c("#c9dad3", "#84ab9b", "#6c9b88", "#63917e", "#537a6a", "#436256", "#3b574c"))+
+  geom_bar(position = "fill")
+
+```
+
+
+
+```{r}
+#| warning: false
+#| message: false
+
+df_clean |> 
+  count(year_geneseo) |> 
+  mutate(prop = n / sum(n)) |> 
+  filter(!is.na(year_geneseo)) |> 
+  ggplot(aes(x = year_geneseo, y = prop,
+             fill = year_geneseo)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c("#c9dad3", "#84ab9b", "#6c9b88", "#63917e", "#537a6a", "#436256", "#3b574c"))+
+  guides(fill = "none") +
+  labs(x = "Year at Geneseo",
+       y = "Proportion",
+       title = "Percent of Respondents and Their Year at Geneseo")
+```
+
+```{r}
+#| warning: false
+#| message: false
+df_clean |> 
+  mutate(score = factor(score)) |> 
+  ggplot(aes(x =score, fill= score)) +
+  scale_fill_manual(values = c("#c9dad3", "#84ab9b", "#6c9b88", "#63917e", "#537a6a", "#436256", "#3b574c"))+
+  geom_bar(show.legend = F)
+```
+
+
+```{r}
+#| warning: false
+#| message: false
+
+df_clean |> 
+  mutate(score = factor(score)) |> 
+  filter(!is.na(year_geneseo)) |> 
+  ggplot(aes(fill =score, x= year_geneseo)) +
+  scale_fill_manual(values = c("#c9dad3", "#84ab9b", "#6c9b88", "#63917e", "#537a6a", "#436256", "#3b574c"))+
+  geom_bar(position = "fill")
+
+```
+
+```{r}
+#| fig-height: 15
+df_clean |>
+  filter(!is.na(major_1)) |>
+  ggplot(aes(y= reorder(major_1, score), fill = reorder(major_1, score), x= score)) +
+  geom_boxplot(show.legend = F) +
+  labs(y = "",
+       x = "Score",
+       title = "Financial Literacy Scores By Major") +
+  scale_fill_manual(values = c("#9BBBAE" ,
+  "#97B8AB" ,
+  "#93B5A7" ,
+  "#8FB2A4" ,
+  "#8AB0A1" ,
+  "#86AD9D" ,
+  "#82AA9A" ,
+  "#7EA796" ,
+  "#7AA493" ,
+  "#76A290" ,
+  "#729F8C" ,
+  "#6D9C89" ,
+  "#699986" ,
+  "#659682" ,
+  "#61937F" ,
+  "#5D907C" ,
+  "#598E78" ,
+  "#558B75" ,
+  "#508872" ,
+  "#4C856E" ,
+  "#48826B" ,
+  "#448067" ,
+  "#407D64" ,
+  "#3C7A61" ,
+  "#38775D" ,
+  "#34745A" ,
+  "#2F7157" ,
+  "#2B6E53" ,
+  "#276C50" ,
+  "#23694D" ,
+  "#1F6649" ,
+  "#1B6346" ,
+  "#176042" ,
+  "#125E3F" ,
+  "#0E5B3C" ,
+  "#0A5838" ,
+  "#065535" )
+) +
+  theme(plot.title = element_text(hjust = .5,
+                                  size = rel(2)))
+
+```
+
+
+
+```{r}
+df_clean |>
+  filter(!is.na(fnce_course_geneseo)) |>
+  mutate(fnce_course_geneseo = factor(fnce_course_geneseo,
+                                      levels = c('More_than_1','1','0'))) |>
+  ggplot(aes(y=score, fill=fnce_course_geneseo))+
+  geom_bar(position = "fill")+
+  theme(legend.position = "top")+
+labs(title = "Finance Course Taken at Geneseo Compared to Score ",
+       x = "Proportion",
+       y = "Score",
+       fill = "Finance Course Taken") +
+  guides(fill = guide_legend(keywidth = 3,
+                             label.position = "bottom",
+                             reverse = T)) +
+  scale_fill_manual(values = rev(c('#9bbbae', '#699985','#065535')))
+```
+
+
+# Empirical Analysis
+## Estimation
+
+```{r}
+df_clean_ML <- df_clean |> 
+  select(-id_respondent, 
+         -score, -score_scaled, 
+         -self_eval, -self_eval_scaled,
+         -county, -year_geneseo,
+         -major_1, -major_2, -minor_1, -minor_2,
+         -starts_with("dept_"), 
+         -q1_inflation, -q2_mortgage_int, -q3_401k,
+         -q4_risk_return, -q5_comp_int, -q6_apr,
+         -prof_program, -graduate_degree,
+         ) |> 
+  drop_na()
+
+df_clean_ML2 <- df_clean |> 
+  select(-id_respondent, 
+         -score_pf, -score_scaled, 
+         -self_eval, -self_eval_scaled,
+         -county, -year_geneseo,
+         -major_1, -major_2, -minor_1, -minor_2,
+         -starts_with("dept_"), 
+         -q1_inflation, -q2_mortgage_int, -q3_401k,
+         -q4_risk_return, -q5_comp_int, -q6_apr,
+         -prof_program, -graduate_degree,
+         ) |> 
+  drop_na()
+
+df_clean_ML_sum <- skim(df_clean_ML) |> 
+  arrange(-n_missing)
+
+dept_fnce <- df_clean_ML |> 
+  group_by(fnce_course_geneseo, major) |> 
+  count() |> 
+  arrange(fnce_course_geneseo, n)
+
+reg <- lm(data = df_clean_ML,
+          score_pf ~ .)
+df_dummies <-  as.data.frame(model.matrix(reg))[, -1]
+df_dummies <- cbind(df_clean_ML$score_pf ,df_dummies)
+df_ML <- df_dummies |> 
+  rename(score_pf = `df_clean_ML$score_pf`)
+
+
+df_dummies_cor <- cor(df_dummies) |> 
+  as.data.frame()
+
+
+reg <- lm(data = df_clean_ML2,
+          score ~ .)
+df_dummies <-  as.data.frame(model.matrix(reg))[, -1]
+df_dummies <- cbind(df_clean_ML2$score ,df_dummies)
+df_ML2 <- df_dummies |> 
+  rename(score = `df_clean_ML2$score`)
+
+```
+
+
+```{r}
+
+colnames(df_ML) <- str_replace_all(colnames(df_ML), " ", "_")
+colnames(df_ML) <- str_replace_all(colnames(df_ML), "-", "_")
+
+colnames(df_ML2) <- str_replace_all(colnames(df_ML2), " ", "_")
+colnames(df_ML2) <- str_replace_all(colnames(df_ML2), "-", "_")
+
+model <- glm(score_pf ~ ., 
+             data = df_ML, 
+             family = binomial(link = "logit") )
+
+
+model_lm <- lm(score ~ ., 
+               data = df_ML2)
+
+# summary(model_lm)
+```
+
+
+
+
+```{r}
+library(margins)
+m <- margins(model)
+ame_result <- summary(m)
+# ame_result
+```
+
+### Regression Table
+
+```{r}
+#| results: asis
+
+stargazer(model, model_lm, type = 'html',
+          omit = c("MSA", "grad_", "pay_",
+                   "college_fund"))
+
+```
+
+### Logit AME
+
+```{r ame-logit}
+#| fig-height: 7
+
+ggplot(data = ame_result |> 
+         filter( p <= .1)) +
+  geom_point( aes(y = reorder(factor, AME), x = AME) ) +
+  geom_errorbar(aes(y = reorder(factor, AME), 
+                    xmin = lower, xmax = upper),
+                width = .5) +
+  geom_vline(xintercept = 0, color = 'red', linetype = 2) +
+  labs(y = "",
+       title = "Logistic Regression Estimation",
+       subtitle = "Average Marginal Effect on Financial Literacy Scores") +
+  scale_x_continuous(breaks = seq(-1,.4,.2),
+                     labels = scales::percent) +
+  theme(plot.title = element_text(hjust = .5),
+        plot.subtitle = element_text(hjust = .5))
+```
+### Linear Regression AME
+
+```{r beta-linear}
+#| fig-height: 7
+broom::tidy(model_lm, conf.int = T) |> 
+  filter(p.value <= .1) |> 
+  filter(!str_detect(term, "MSA")) |> 
+  ggplot() +
+  geom_point( aes(y = reorder(term, estimate), x = estimate)) +
+  geom_errorbar(aes(y = reorder(term, estimate), 
+                    xmin = conf.low, xmax = conf.high),
+                width = .5,) +
+  geom_vline(xintercept = 0, color = 'red', linetype = 2) +
+  labs(y = "",
+       x = "Beta Estimate",
+       title = "Linear Regression Estimation",
+       subtitle = "Effect on Financial Literacy Scores")  +
+  theme(plot.title = element_text(hjust = .5),
+        plot.subtitle = element_text(hjust = .5),
+        )
+```
+
+
+
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-height: 8
+df_ML |> 
+  mutate(q_yes = ifelse(q_yes==0, 'Invests', "Doesn't Invest")) |> 
+  ggplot(aes(x = over_confidence,
+             fill = factor(score_pf))) +
+  geom_density(alpha = .25) + 
+  labs(fill = "Pass/ Fail") +
+  facet_grid(q_yes ~ .)
+```
+
+```{r}
+df_ML |> 
+  mutate(prof_program_TF = ifelse(prof_program_TF==0, 
+                        'Not in a Professional Program', 
+                        'In a Professional Program')) |> 
+  ggplot(aes(x = over_confidence,
+             fill = factor(score_pf))) +
+  geom_density(alpha = .25) +
+    labs(fill = "Pass/ Fail") +
+  facet_wrap(prof_program_TF ~.)
+```
+
+```{r}
+df_clean |> 
+  ggplot(aes(x = over_confidence, y = major)) +
+  geom_boxplot() 
+```
+
+### Classficiation Tree
+
+
+
+
+```{r tree-classification}
+library(rpart)
+library(rpart.plot)
+
+rf <- rpart(score_pf ~ .,
+            data = df_ML, method  = "class")
+# rf
+# printcp(rf)
+rpart.plot(rf)
+```
+
+### Regression Tree
+```{r tree-regression}
+
+rf_reg <- rpart(score ~ .,
+            data = df_ML2, method  = "anova")
+# rf_reg
+# printcp(rf_reg)
+rpart.plot(rf_reg)
+
+```
+
+
+### Random Forest - Variable Importance
+```{r vip}
+
+library(ranger)
+library(vip)
+fao_ranger1 <- ranger(score ~ ., 
+                        data = df_ML2, 
+                        mtry = 13, num.trees = 50,
+                        importance = "impurity")
+
+vip1 <- vip(fao_ranger1)
+
+df1 <- data.frame(
+    var = vip1[["data"]][["Variable"]],
+    imp = vip1[["data"]][["Importance"]]
+  ) %>% 
+    arrange(var)
+
+
+df1 |> 
+  ggplot(aes(x = imp, y = reorder(var, imp),
+             fill = reorder(var, imp))) +
+  geom_col(show.legend = F) +
+  scale_x_log10() +
+  labs(x = "Variable Importance",
+       y = "",
+       title = "Random Forest Estimation",
+       subtitle = "Varialbe Importance") +
+  scale_fill_manual(values = c("#E5F5E0" ,
+  "#CCE1CA" ,
+  "#B2CEB4" ,
+  "#99BA9E" ,
+  "#7FA688" ,
+  "#669373" ,
+  "#4C7F5D",
+  "#336B47",
+  "#195831" ,
+  "#00441B")) +
+  theme(plot.title = element_text(hjust = .5),
+        plot.subtitle = element_text(hjust = .5))
+
+
+```
+
+```{r}
+df_clean_ML <- df_clean |> 
+  select(-id_respondent, 
+         -score, -score_scaled, 
+         -self_eval,
+         -county, -year_geneseo,
+         -major_1, -major_2, -minor_1, -minor_2,
+         -prof_program, -graduate_degree,
+         ) |> 
+  mutate(dept_major_2 = ifelse(!is.na(dept_major_2), 1, 0),
+         dept_minor_1 = ifelse(!is.na(dept_minor_1), 1, 0),
+         dept_minor_2 = ifelse(!is.na(dept_minor_2), 1, 0)
+         ) |> 
+  drop_na()
+
+df_clean_ML_sum <- skim(df_clean_ML) |> 
+  arrange(-n_missing)
+
+dept_fnce <- df_clean_ML |> 
+  group_by(fnce_course_geneseo, major) |> 
+  count() |> 
+  arrange(fnce_course_geneseo, n)
+
+reg <- lm(data = df_clean_ML,
+          score_pf ~ .)
+df_dummies <-  as.data.frame(model.matrix(reg))[, -1]
+df_dummies <- cbind(df_clean_ML$score_pf ,df_dummies)
+df_dummies <- df_dummies |> 
+  rename(score_pf = `df_clean_ML$score_pf`)
+
+df_dummies_cor <- cor(df_dummies) |> 
+  as.data.frame()
+```
+
+
+
+
+
+
+
