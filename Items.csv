@@ -1,0 +1,33 @@
+﻿Data Item,Description
+time_stamp,When the survey was taken
+email,SUNY Geneseo of the participant 
+score,"How many out of the 6 ""quiz"" questions the participant got correct"
+grad_year,Year the participant graduated high school
+county,The county that the participant graduated from high school from
+year_geneseo,Credit year at SUNY Geneseo
+transfer,Whether or not the student is a transfer student
+major,Major(s) at SUNY Geneseo
+minor,Minor(s) at SUNY Geneseo
+prof_program,Which professional program(s) the student may be involved in
+graduate_degree,Whether or not the student is in a graduate program and which they are in
+self_eval,What score the participant would give themselves on a scale from 1-5 for financial literacy
+age_first_job,Age the participant got their first job
+file_tax,Whether the participant or their parent filed their taxes in for 2023
+college_fund,If the participants parents set up a college fund for them
+parent_job,Did the participants parents work in the finance/ accounting/ real estate industry
+credit_card,Does the participant have their own credit card or uses their parents
+age_credit_card,Age the participant got their first credit card
+pay_rent,Whether or not the participant pays rent
+own_house,Whether or not the participant owns a house
+car_payment,Whether or not the participant makes car payments
+brokerage_acct,Does the participant have a brokerage account or manages their own invesntment portfolio or retirement investments
+fnce_course_b4,Did the participant take a finance course before coming to SUNY Geneseo
+fnce_course_geneseo,Did the student take a finance course at SUNY Geneseo and if they took 1 or more than one
+q1_inflation,Quiz question about inflation
+q2_mortgage_int,Quiz question about mortgage interest
+q3_401k,Quiz question about 401k plans
+q4_risk_return,Quiz question about risk and returns in investing
+q5_comp_int,Quiz quesiton about compound interest
+q6_apr,Quiz quesiton about annual percentage rate
+q7_trap,Trap question to weed out surveys 
+gold,Question about whether or not the participant would take a self-study personal fiannce course if it were offered through GOLD

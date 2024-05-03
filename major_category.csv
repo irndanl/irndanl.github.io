@@ -1,0 +1,71 @@
+major_1,dept_1,major_2,dept_2
+Accounting,School of Business,NA,NA
+Accounting,School of Business,Mathematics,Mathematics
+Accounting,School of Business,Economics,School of Business
+Anthropology,Anthropology,French,Global Languages and Cultures
+Anthropology,Anthropology,NA,NA
+Applied Mathematics,Mathematics,NA,NA
+Applied Physics,Physics,Sustainability Studies,Geography and Sustainability Studies
+Applied Physics,Physics,NA,NA
+Applied Physics,Physics,Mathematics,Mathematics
+Art History,Art History,NA,NA
+Biochemistry,Biology,Finance,School of Business
+Biochemistry,Biology,NA,NA
+Biology,Biology,NA,NA
+Biophysics,Biology,Chemistry,Chemistry
+Business Administration,School of Business,NA,NA
+Business Administration,School of Business,Communication,Communication
+Chemistry,Chemistry,NA,NA
+Chemistry,Chemistry,Adolescence Education: Chemistry and Gen Science,Education
+Chemistry,Chemistry,English,English
+Childhood Education/Special Education,Education,NA,NA
+Childhood Education/Special Education,Education,English,English
+Communication,Communication,English,English
+Communication,Communication,Sociomedical Sciences,Sociomedical Sciences
+Communication,Communication,NA,NA
+Communication,Communication,Sociology,Sociology
+Data Analytics,School of Business,NA,NA
+Data Analytics,School of Business,Sociology,Sociology
+Early Childhood/Childhood Education,Education,NA,NA
+Economics,School of Business,NA,NA
+Economics,School of Business,International Relations,Political Science and International Relations
+Economics,School of Business,Finance,School of Business
+English,English,Adolescence Education,Education
+English,English,NA,NA
+English,English,Political Science,Political Science and International Relations
+English,English,Psychology,Psychology
+Finance,School of Business,NA,NA
+Finance,School of Business,Pre-med,NA
+French,Global Languages and Cultures,Adolescence Education,Education
+Geological Sciences,Geology,Adolescence Education: Earth Science and General Science,Education
+Geological Sciences,Geology,NA,NA
+History,History,Political Science,Political Science and International Relations
+History,History,NA,NA
+History,History,Adolescence Education: Social Studies,Education
+History,History,History,History
+Individualized Studies,Individualized Studies,NA,NA
+International Relations,Political Science and International Relations,Political Science,Political Science and International Relations
+Marketing,School of Business,NA,NA
+Mathematics,Mathematics,Physics,Physics
+Mathematics,Mathematics,Adolescence Education: Mathematics,Education
+Mathematics,Mathematics,NA,NA
+Music,Music,NA,NA
+Musical Theatre,Musical Theatre,NA,NA
+Neuroscience,Neuroscience,NA,NA
+Philosophy,Philosophy,Political Science,Political Science and International Relations
+Philosophy,Philosophy,NA,NA
+Physics,Physics,NA,NA
+Political Science,Political Science and International Relations,Sustainability Studies,Geography and Sustainability Studies
+Political Science,Political Science and International Relations,NA,NA
+Political Science,Political Science and International Relations,Psychology,Psychology
+Psychology,Psychology,NA,NA
+Psychology,Psychology,Sociology,Sociology
+Sociology,Sociology,NA,NA
+Sociology,Sociology,Sociomedical Sciences,Sociomedical Sciences
+Sociomedical Sciences,Sociomedical Sciences,NA,NA
+Spanish,Global Languages and Cultures,Adolescence Education: Spanish,Education
+Spanish,Global Languages and Cultures,NA,NA
+Sustainability Studies,Geography and Sustainability Studies,NA,NA
+Undecided,Undecided,NA,NA
+undeclared,Undecided,NA,NA
+NA,NA,NA,NA
