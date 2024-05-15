@@ -102,6 +102,13 @@ This survey is being commissioned by the SUNY Geneseo School of Business in part
 # Data
 ## Preparation of Data
 
+```{=html}
+<style>iframe{height: 1200px; width: 800px}</style>
+<iframe height="100%" width="100%" frameborder="no"
+src="https://isabellanicastro.shinyapps.io/hw5-shiny/">
+</iframe>
+```
+
 ```{r}
 #| warning: false
 #| message: false
@@ -416,6 +423,28 @@ df_clean_sum <- skim(df_clean) |>
   arrange(-n_missing)
 ```
 
+```{r}
+skim(df_clean) |> 
+  filter(skim_type == 'numeric') |> 
+  select(-starts_with('character'), -n_missing,-complete_rate)
+```
+
+
+```{r}
+df_clean |> 
+  filter(major == 'School of Business') |> 
+  skim() |> 
+  filter(skim_type == 'numeric') |> 
+  select(-starts_with('character'), -n_missing,-complete_rate)
+```
+
+```{r}
+df_clean |> 
+  filter(major != 'School of Business') |> 
+  skim() |> 
+  filter(skim_type == 'numeric') |> 
+  select(-starts_with('character'), -n_missing,-complete_rate)
+```
 
 ```{r}
 #| warning: false

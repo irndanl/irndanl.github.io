@@ -1,0 +1,138 @@
+---
+title: "Data Visualization 4"
+author: "Isabella Nicastro"
+date: "2024-02-21"
+categories: [ggplot, code, analysis]
+---
+
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(gapminder)
+library(skimr)   # a better summary of data.frame
+library(scales)  # scales for ggplot
+library(ggthemes)  # additional ggplot themes
+library(hrbrthemes) # additional ggplot themes and color pallets
+library(lubridate)
+library(ggridges)
+library(ggrepel)
+library(tidyverse)
+library(ggfortify) # to create regression-related plots
+library(ggcorrplot) # to create correlation heatmaps
+library(fastDummies) # to create dummy variables
+theme_set(theme_minimal()) # setting the minimal theme for ggplot
+
+library(tidyverse)
+library(socviz)
+library(lubridate)
+library(geofacet)
+```
+
+# Question 1
+
+
+```{r}
+unemp_house_prices <- read_csv(
+  'https://bcdanl.github.io/data/unemp_house_prices.csv')
+```
+```{r}
+
+#| fig-height: 9
+
+unemp_house_prices |> 
+  filter(year(date) >= 2008) |> 
+  ggplot(aes(x=date , y = unemploy_perc/100)) +
+  geom_line(color='black') +
+  geom_area(fill = 'lightblue') +
+  facet_geo(~ state) +
+  scale_x_date(breaks = '2 years',
+               labels = date_format('%y')) +
+  scale_y_percent() +
+  labs(title = "",
+    x = "",
+    y = "Unemployment Rate (%)") +
+  theme(strip.text.x = element_text(size = 6),
+        axis.text.x = element_text(size = rel(.75)))
+```
+
+#Question 2
+```{r}
+library(ggplot2)
+library(sf)
+library(maps)
+
+election_panel <- read_csv(
+  'https://bcdanl.github.io/data/election_panel.csv')
+
+county_map <- socviz::county_map
+
+
+alaska_2000 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2000,
+         pct_DEMOCRAT = NA)
+
+alaska_2004 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2004,
+         pct_DEMOCRAT = NA)
+
+alaska_2008 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2008,
+         pct_DEMOCRAT = NA)
+
+alaska_2012 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2012,
+         pct_DEMOCRAT = NA)
+
+alaska_2016 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2016,
+         pct_DEMOCRAT = NA)
+alaska_2020 <- county_map |> 
+  filter(str_sub(id, 1, 2) == '02') |> 
+  mutate(year = 2020,
+         pct_DEMOCRAT = NA)
+
+alaska_map <- rbind(alaska_2000,alaska_2004,alaska_2008, alaska_2012,alaska_2016, alaska_2020) |> 
+  select(id, long, lat, group, pct_DEMOCRAT, year) |> 
+  relocate(id, long, lat, group, pct_DEMOCRAT, year)
+
+
+
+election_panel <- election_panel |> 
+  left_join(county_map, by = c('id'))
+
+election_panel2 <- election_panel |> 
+  select(id, long, lat, group, pct_DEMOCRAT, year) 
+
+
+election_panel2 <- election_panel2 |> 
+  rbind(alaska_map)
+
+p0 <- ggplot(data = election_panel2,
+             mapping = aes(x = long, y = lat,
+                 group = group,
+                 fill = pct_DEMOCRAT))
+
+p1 <- p0 + geom_polygon(color = "gray90", size = 0.05)  
+
+p2 <- p1 + scale_fill_gradient(low = 'white', high = '#2E74C0')
+
+p2 + theme_map() + facet_wrap(~ year, ncol = 3) +
+    theme(legend.position = "bottom",
+          strip.background = element_blank()) +
+    labs(fill = "Percent Democrat ",
+         title = "U.S Presidential Election, 2000-2020 ")  
+
+
+```
+
+
+<!-- References: -->
+
+<!-- -   [Fundamentals of Data Visualization by Claus O. Wilke](https://clauswilke.com/dataviz) -->
+<!-- -   [Data Visualization: A practical introduction by Kieran Healy](https://socviz.co) -->
