@@ -3,7 +3,7 @@ project:
   output-dir: "."
 
 website:
-  title: "Isabella Nicastro"
+  title: "Isabella Nicastro" 
   navbar:
     pinned: true
     left:
